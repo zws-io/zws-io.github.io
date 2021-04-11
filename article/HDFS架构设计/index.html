@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Linux命令 - WenShan Zheng| zhengws | 郑文山
+          HDFS架构设计 - WenShan Zheng| zhengws | 郑文山
         
     </title>
 
-    <link rel="canonical" href="https://zhengwenshan.github.io/article/Linux命令/">
+    <link rel="canonical" href="https://zhengwenshan.github.io/article/HDFS架构设计/">
     <!-- fancybox support -->
     
       <link rel="stylesheet" href="/js/fancybox/jquery.fancybox.min.css">
@@ -91,14 +91,14 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                              <a class="tag" href="/tags/#BigData" title="BigData">BigData</a>
                             
                         </div>
-                        <h1>Linux命令</h1>
+                        <h1>HDFS架构设计</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by zhengws on
-                            2021-04-02
+                            2021-04-11
                         </span>
                     </div>
                 
@@ -215,21 +215,90 @@
                 col-md-8 col-md-offset-1
                 post-container">
 
-                <h1 id="一-linux-网络诊断命令">一、Linux 网络诊断命令</h1>
-<h2 id="1-查看网络接口速率">1、查看网络接口速率</h2>
+                <h1 id="一-hdfs架构设计">一、HDFS架构设计</h1>
+<h2 id="11-整体架构">1.1 整体架构</h2>
+<p>HDFS是一个主从(Master/Slave)架构，由一个NameNode和一些DataNode组成，NameNode负责存储和管理文件元数据(metadata)，并维护一个层次型的文件目录树，而DataNode则负责存储文件数据(block块)，提供block块的读写，并与NameNode维持心跳，上报自身持有的block块信息.</p>
+<p><img src="/images/HDFS/hdfs_architecture.png" alt></p>
+<h2 id="12-角色功能">1.2 角色功能</h2>
 <ul>
-<li>IFACE：ens192接口，网络设备的名称</li>
-<li>rxpck/s：每秒钟接收的数据包</li>
-<li>txpck/s：每秒钟发送的数据包</li>
-<li>rxbyt/s：每秒钟接收的字节数</li>
-<li>txbyt/s：每秒钟发送的字节数</li>
-<li>rxcmp/s：每秒钟接收的压缩数据包</li>
-<li>txcmp/s：每秒钟发送的压缩数据包</li>
-<li>rxmcst/s：每秒钟接收的多播数据包</li>
+<li>NameNode
+<ul>
+<li>完全基于内存存储文件元数据、目录结构、文件block映射</li>
+<li>需要持久化，来保证数据可靠性(fsimage + editlog)</li>
+<li>提供副本放置策略 (提高容错性)</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@manager-slave-1 ~]# sar -n DEV 2 5 </span><br><span class="line">Linux 3.10.0-862.el7.x86_64 (manager-slave-1.uc)        04/02/2021      _x86_64_        (8 CPU)</span><br><span class="line"></span><br><span class="line">03:14:39 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:41 PM    ens192    551.50    760.00    129.52    320.55      0.00      0.00      0.00</span><br><span class="line">03:14:41 PM        lo    650.00    650.00    305.23    305.23      0.00      0.00      0.00</span><br><span class="line"></span><br><span class="line">03:14:41 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:43 PM    ens192    706.00    821.50    112.94    238.73      0.00      0.00      0.00</span><br><span class="line">03:14:43 PM        lo    460.50    460.50    387.27    387.27      0.00      0.00      0.00</span><br><span class="line"></span><br><span class="line">03:14:43 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:45 PM    ens192    995.50   1105.50    270.77    375.79      0.00      0.00      0.00</span><br><span class="line">03:14:45 PM        lo    451.00    451.00    282.88    282.88      0.00      0.00      0.00</span><br><span class="line"></span><br><span class="line">03:14:45 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:47 PM    ens192    431.50    531.00     59.89    222.73      0.00      0.00      0.00</span><br><span class="line">03:14:47 PM        lo    332.00    332.00    242.30    242.30      0.00      0.00      0.00</span><br><span class="line"></span><br><span class="line">03:14:47 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:49 PM    ens192    852.00    912.00    108.38    230.29      0.00      0.00      0.00</span><br><span class="line">03:14:49 PM        lo    258.00    258.00    291.48    291.48      0.00      0.00      0.00</span><br></pre></td></tr></table></figure>
-<h2 id="2vim-快捷命令">2.Vim 快捷命令</h2>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">r: 替换某个字节</span><br><span class="line">ndw: 光标定位单次第一个位置，快速删除单词</span><br><span class="line">D: 快速删除光标后面所有字符</span><br></pre></td></tr></table></figure>
+</li>
+<li>DataNode
+<ul>
+<li>基于本地磁盘存储block块(原始文件形式,非二进制)</li>
+<li>保存block校验和，保证数据的可靠性</li>
+<li>与NameNode维持心跳，汇报block列表状态</li>
+</ul>
+</li>
+</ul>
+<h2 id="13-元数据持久化机制">1.3 元数据持久化机制</h2>
+<h3 id="131-内存持久化方案">1.3.1 内存持久化方案</h3>
+<p>基于内存存储必然存在掉电即失及内存空间受限问题，因此必须采用一种持久化机制，来保证数据的可靠性。那么如何来持久化数据呢？业界上基本上有以下两种方式来处理</p>
+<ul>
+<li>
+<ol>
+<li>内存镜像定期落盘(FsImage)</li>
+</ol>
+<ul>
+<li>
+<p>优点：</p>
+<ul>
+<li>服务重启，恢复速度快，体积与内存相当</li>
+<li>可任意恢复到特定时间节点数据</li>
+</ul>
+<blockquote>
+<p>比如 1点、2点、3点各自持久化一次镜像文件，保留了三个镜像文件，那么可以任意恢复到指定的时间节点上</p>
+</blockquote>
+</li>
+<li>
+<p>缺点：</p>
+</li>
+<li>
+<p>单次持久化磁盘，性能损耗</p>
+</li>
+</ul>
+<blockquote>
+<p>将内存全量数据刷到磁盘，必会进行大量的IO操作，对机器性能产生损耗。</p>
+</blockquote>
+<ul>
+<li>数据丢失多</li>
+</ul>
+<blockquote>
+<p>由于每次持久化消耗大量IO资源，那么必然不能频繁进行持久化操作，因此会最大会丢失持久化时间间隔长度的数据</p>
+</blockquote>
+</li>
+<li>
+<ol start="2">
+<li>记录实时日志(editlog)</li>
+</ol>
+</li>
+<li>
+<p>优点：</p>
+<ul>
+<li>数据完整性，丢失少。</li>
+</ul>
+<blockquote>
+<p>针对这种元数据变化较少的数据，采用editlog可以每次同步刷盘持久化数据，如果针对数据变更较为频繁的，其实也不能进行同步刷盘，必然会导致性能下降，其实主要还是基于业务特性及数据重要程度来进行选择。</p>
+</blockquote>
+</li>
+<li>
+<p>缺点：</p>
+<ul>
+<li>重启服务，加载速度慢, 并有体积膨胀风险</li>
+</ul>
+<blockquote>
+<p>日志记录是一个持续性动作，由于日积月累那么日志文件必然会越积越多，文件大小膨胀。然而当服务重启时，则需要一步步读取editlog中的记录，然后一条条执行，其实里面有很多是重复操作了同一条数据，甚至进行创建了后又删除了这种动作，相当于浪费资源了。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="132-namenode内存持久化方式">1.3.2 NameNode内存持久化方式</h3>
+<p>NameNode 吸取了以上两种方式的优点，采用了FsImage + EditLog整合的方案，滚动将EditLog更新到FsImage, 以保证更近时点的FsImage和更小的EditLog体积。</p>
+<p>待更新…</p>
 
                 
 
@@ -237,13 +306,9 @@
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/article/RocketMQ网络模型/" data-toggle="tooltip" data-placement="top" title="[RocketMQ] RocketMQ网络模型">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/article/HDFS启蒙/" data-toggle="tooltip" data-placement="top" title="HDFS启蒙">Next Post &rarr;</a>
+                            <a href="/article/RocketMQ消息存储/" data-toggle="tooltip" data-placement="top" title="[RocketMQ] RocketMQ消息存储">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -284,7 +349,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一-linux-网络诊断命令"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">一、Linux 网络诊断命令</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-查看网络接口速率"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">1、查看网络接口速率</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2vim-快捷命令"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">2.Vim 快捷命令</span></a></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一-hdfs架构设计"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">一、HDFS架构设计</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#11-整体架构"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">1.1 整体架构</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#12-角色功能"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">1.2 角色功能</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#13-元数据持久化机制"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">1.3 元数据持久化机制</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#131-内存持久化方案"><span class="toc-nav-number">1.3.1.</span> <span class="toc-nav-text">1.3.1 内存持久化方案</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#132-namenode内存持久化方式"><span class="toc-nav-number">1.3.2.</span> <span class="toc-nav-text">1.3.2 NameNode内存持久化方式</span></a></li></ol></li></ol></li></ol>
         
         </div>
       </aside>
@@ -304,7 +369,7 @@
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                          <a class="tag" href="/tags/#BigData" title="BigData">BigData</a>
                         
                     </div>
                 </section>
