@@ -152,14 +152,14 @@
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
@@ -215,9 +215,7 @@
                 col-md-8 col-md-offset-1
                 post-container">
 
-                <h1 id="一-linux-网络诊断命令">一、Linux 网络诊断命令</h1>
-<h2 id="1-查看网络接口速率">1、查看网络接口速率</h2>
-<ul>
+                <h1 id="一-linux-网络诊断命令"><a href="#一、Linux-网络诊断命令" class="headerlink" title="一、Linux 网络诊断命令"></a>一、Linux 网络诊断命令</h1><h2 id="1-查看网络接口速率"><a href="#1、查看网络接口速率" class="headerlink" title="1、查看网络接口速率"></a>1、查看网络接口速率</h2><ul>
 <li>IFACE：ens192接口，网络设备的名称</li>
 <li>rxpck/s：每秒钟接收的数据包</li>
 <li>txpck/s：每秒钟发送的数据包</li>
@@ -225,11 +223,10 @@
 <li>txbyt/s：每秒钟发送的字节数</li>
 <li>rxcmp/s：每秒钟接收的压缩数据包</li>
 <li>txcmp/s：每秒钟发送的压缩数据包</li>
-<li>rxmcst/s：每秒钟接收的多播数据包</li>
+<li>rxmcst/s：每秒钟接收的多播数据包<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@manager-slave-1 ~]# sar -n DEV 2 5 </span><br><span class="line">Linux 3.10.0-862.el7.x86_64 (manager-slave-1.uc)        04/02/2021      _x86_64_        (8 CPU)</span><br><span class="line"></span><br><span class="line">03:14:39 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:41 PM    ens192    551.50    760.00    129.52    320.55      0.00      0.00      0.00</span><br><span class="line">03:14:41 PM        lo    650.00    650.00    305.23    305.23      0.00      0.00      0.00</span><br><span class="line"></span><br><span class="line">03:14:41 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:43 PM    ens192    706.00    821.50    112.94    238.73      0.00      0.00      0.00</span><br><span class="line">03:14:43 PM        lo    460.50    460.50    387.27    387.27      0.00      0.00      0.00</span><br><span class="line"></span><br><span class="line">03:14:43 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:45 PM    ens192    995.50   1105.50    270.77    375.79      0.00      0.00      0.00</span><br><span class="line">03:14:45 PM        lo    451.00    451.00    282.88    282.88      0.00      0.00      0.00</span><br><span class="line"></span><br><span class="line">03:14:45 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:47 PM    ens192    431.50    531.00     59.89    222.73      0.00      0.00      0.00</span><br><span class="line">03:14:47 PM        lo    332.00    332.00    242.30    242.30      0.00      0.00      0.00</span><br><span class="line"></span><br><span class="line">03:14:47 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:49 PM    ens192    852.00    912.00    108.38    230.29      0.00      0.00      0.00</span><br><span class="line">03:14:49 PM        lo    258.00    258.00    291.48    291.48      0.00      0.00      0.00</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@manager-slave-1 ~]# sar -n DEV 2 5 </span><br><span class="line">Linux 3.10.0-862.el7.x86_64 (manager-slave-1.uc)        04/02/2021      _x86_64_        (8 CPU)</span><br><span class="line"></span><br><span class="line">03:14:39 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:41 PM    ens192    551.50    760.00    129.52    320.55      0.00      0.00      0.00</span><br><span class="line">03:14:41 PM        lo    650.00    650.00    305.23    305.23      0.00      0.00      0.00</span><br><span class="line"></span><br><span class="line">03:14:41 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:43 PM    ens192    706.00    821.50    112.94    238.73      0.00      0.00      0.00</span><br><span class="line">03:14:43 PM        lo    460.50    460.50    387.27    387.27      0.00      0.00      0.00</span><br><span class="line"></span><br><span class="line">03:14:43 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:45 PM    ens192    995.50   1105.50    270.77    375.79      0.00      0.00      0.00</span><br><span class="line">03:14:45 PM        lo    451.00    451.00    282.88    282.88      0.00      0.00      0.00</span><br><span class="line"></span><br><span class="line">03:14:45 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:47 PM    ens192    431.50    531.00     59.89    222.73      0.00      0.00      0.00</span><br><span class="line">03:14:47 PM        lo    332.00    332.00    242.30    242.30      0.00      0.00      0.00</span><br><span class="line"></span><br><span class="line">03:14:47 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:49 PM    ens192    852.00    912.00    108.38    230.29      0.00      0.00      0.00</span><br><span class="line">03:14:49 PM        lo    258.00    258.00    291.48    291.48      0.00      0.00      0.00</span><br></pre></td></tr></table></figure>
-<h2 id="2vim-快捷命令">2.Vim 快捷命令</h2>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">r: 替换某个字节</span><br><span class="line">ndw: 光标定位单次第一个位置，快速删除单词</span><br><span class="line">D: 快速删除光标后面所有字符</span><br></pre></td></tr></table></figure>
+<h2 id="2vim-快捷命令"><a href="#2-Vim-快捷命令" class="headerlink" title="2.Vim 快捷命令"></a>2.Vim 快捷命令</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">r: 替换某个字节</span><br><span class="line">ndw: 光标定位单次第一个位置，快速删除单词</span><br><span class="line">D: 快速删除光标后面所有字符</span><br></pre></td></tr></table></figure>
 
                 
 

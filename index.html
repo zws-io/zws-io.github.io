@@ -144,14 +144,14 @@
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
@@ -214,6 +214,164 @@
 
 <div class="post-preview">
 
+    <a href="/article/HDFS HA/">
+        <h2 class="post-title">
+                                 
+            HDFS NameNode 高可用
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            一、需求背景从前面了解到的 HDFS NameNode其实只有一个主，另外一个SecondaryNode其实仅仅只是做FsImage与EditLog 滚动式合并的作用，压根就没有承载来着client的流量，另外更为致命的是如果NameNode挂掉后，整个系统就蹦了，无法对外提供服务。然而，对于分布式文件系统，其作为各种计算的底层存储技术，对可用性要求极高，不能因为服务不可用而导致上层业务不可......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by zhengws on
+            2021-04-14
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#BigData" title="BigData">BigData</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/article/HDFS 读写流程/">
+        <h2 class="post-title">
+                                 
+            HDFS 读写流程
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            #
+...
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by zhengws on
+            2021-04-13
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#BigData" title="BigData">BigData</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/article/HDFS 副本放置策略/">
+        <h2 class="post-title">
+                                 
+            HDFS 副本放置策略
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            #
+...
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by zhengws on
+            2021-04-12
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#BigData" title="BigData">BigData</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/article/HDFS 元数据持久化机制/">
+        <h2 class="post-title">
+                                 
+            HDFS NameNode元数据持久化机制
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            一、 业界内存持久化方案基于内存存储必然存在掉电即失及内存空间受限问题，因此必须采用一种持久化机制，来保证数据的可靠性。那么如何来持久化数据呢？业界上基本上有以下两种方式来处理
+
+内存镜像定期落盘(FsImage)
+
+优点：
+
+服务重启，恢复速度快，体积与内存相当
+可任意恢复到特定时间节点数据
+
+
+比如 1点、2点、3点各自持久化一次镜像文件，保留了三个镜像文件，那么可以任意恢复到指定的时间......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by zhengws on
+            2021-04-11
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#BigData" title="BigData">BigData</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/article/HDFS 安全模式/">
+        <h2 class="post-title">
+                                 
+            HDFS 安全模式
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            #
+...
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by zhengws on
+            2021-04-11
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#BigData" title="BigData">BigData</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/article/HDFS架构设计/">
         <h2 class="post-title">
                                  
@@ -223,11 +381,10 @@
             
         </h3>
         <div class="post-content-preview">
-            一、HDFS架构设计
-1.1 整体架构
-HDFS是一个主从(Master/Slave)架构，由一个NameNode和一些DataNode组成，NameNode负责存储和管理文件元数据(metadata)，并维护一个层次型的文件目录树，而DataNode则负责存储文件数据(block块)，提供block块的读写，并与NameNode维持心跳，上报自身持有的block块信息.
+            一、HDFS架构设计1.1 整体架构HDFS是一个主从(Master/Slave)架构，由一个NameNode和一些DataNode组成，NameNode负责存储和管理文件元数据(metadata)，并维护一个层次型的文件目录树，而DataNode则负责存储文件数据(block块)，提供block块的读写，并与NameNode维持心跳，上报自身持有的block块信息.
 
-1.2 角色功能......
+1.2 角色功能
+N......
         </div>
     </a>
     
@@ -256,13 +413,10 @@ HDFS是一个主从(Master/Slave)架构，由一个NameNode和一些DataNode组�
             
         </h3>
         <div class="post-content-preview">
-            一、HDFS基础环境安装
-1.1 安装JDK
+            一、HDFS基础环境安装1.1 安装JDK
+下载至少1.8版本以上的jdk rpm包，安装并设置环境变量。1.2 设置HDFS环境变量
 
-下载至少1.8版本以上的jdk rpm包，安装并设置环境变量。
-
-1.2 设置HDFS环境变量
-123456# User specific environment and startup programsJAVA_HOME=/usr/java/defaultHADOOP_HOME=/opt/bigdata/hadoop-2.6.5PATH=$P......
+123456# User specific environment and startup programsJAVA_HOME=/usr/java/defaultHADOOP_HOME=/opt/bigdata/hadoop-2.6.5PATH=$PATH......
         </div>
     </a>
     
@@ -291,10 +445,7 @@ HDFS是一个主从(Master/Slave)架构，由一个NameNode和一些DataNode组�
             
         </h3>
         <div class="post-content-preview">
-            一、消息持久化
-RocketMQ作为分布式消息队列，为了消息的高可靠性，需要将消息进行磁盘持久化存储。那么磁盘存储如何满足高吞吐性能要求？
-实际上，磁盘有时候会比你想象的快很多，有时候也会比你想象的慢很多，关键在如何使用，使用得当，磁盘的速度完全可以匹配上网络的数据传输速度。
-目前的高性能磁盘，顺序写速度可以达到600MB/s，超过了一般网卡的传输速度，这是磁盘比想象的快的地方。但是磁盘随机......
+            一、消息持久化RocketMQ作为分布式消息队列，为了消息的高可靠性，需要将消息进行磁盘持久化存储。那么磁盘存储如何满足高吞吐性能要求？实际上，磁盘有时候会比你想象的快很多，有时候也会比你想象的慢很多，关键在如何使用，使用得当，磁盘的速度完全可以匹配上网络的数据传输速度。目前的高性能磁盘，顺序写速度可以达到600MB/s，超过了一般网卡的传输速度，这是磁盘比想象的快的地方。但是磁盘随机写的速......
         </div>
     </a>
     
@@ -324,16 +475,14 @@ RocketMQ作为分布式消息队列，为了消息的高可靠性，需要将消
         </h3>
         <div class="post-content-preview">
             架构设计
-
 1 技术架构
-
 RocketMQ架构上主要分为四部分:
-
 
 Producer：消息发布的角色，支持分布式集群方式部署。Producer通过MQ的负载均衡模块选择相应的Broker集群队列进行消息投递，投递的过程支持快速失败并且低延迟。
 
+Consumer：消息消费的角色，支持分布式集群方式部署。支持以push推，pull拉两种模式对消息进行消费，同时也支持集群方式和广播方式的消费。
 
-Consumer：消息消费的角色，支持分布式集群方式部署。支持以push推，pull拉两种模式对消息进行消费，同时也支持集群方式和广播方式的消......
+......
         </div>
     </a>
     
@@ -363,13 +512,11 @@ Consumer：消息消费的角色，支持分布式集群方式部署。支持以
         </h3>
         <div class="post-content-preview">
             一、Broker 网络模型架构
-
 1.1 整体处理流程
-
 Netty eventLoopGroupBoss 作为 acceptor 负责接收客户端的连接请求
 Netty eventLoopGroupSelector 负责 NIO 的读写操作
 NettyServerHandler 读取 IO 数据，并对消息头进行解析
-Dispatch 过程根据注册的消息 code 和 processsor 把......
+Dispatch 过程根据注册的消息 code 和 processsor 把不同......
         </div>
     </a>
     
@@ -387,88 +534,16 @@ Dispatch 过程根据注册的消息 code 和 processsor 把......
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/article/Linux命令/">
-        <h2 class="post-title">
-                                 
-            Linux命令
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            一、Linux 网络诊断命令
-1、查看网络接口速率
-
-IFACE：ens192接口，网络设备的名称
-rxpck/s：每秒钟接收的数据包
-txpck/s：每秒钟发送的数据包
-rxbyt/s：每秒钟接收的字节数
-txbyt/s：每秒钟发送的字节数
-rxcmp/s：每秒钟接收的压缩数据包
-txcmp/s：每秒钟发送的压缩数据包
-rxmcst/s：每秒钟接收的多播数据包
-
-1234567891011......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by zhengws on
-            2021-04-02
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Linux" title="Linux">Linux</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/article/HDFS启蒙/">
-        <h2 class="post-title">
-                                 
-            HDFS启蒙
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            一、技术思考
-每个技术的产生，其实都是有它存在的背景及其价值，在学习一个技术前，先搞懂该技术存在的意义，才能在学习过程中掌握该项技术的精髓所在，而不会陷入因为学习而学习，最终还是没搞懂其主要解决什么问题。接下来我们先来看看，普通单机场景下，我们是如何来处理海量数据？
-二、单机处理海量数据
-首先我们来思考下以下两种场景，普通单机程序如何进行处理，怎样较少IO，提升效率？
-2.1 案例一
-
-给你......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by zhengws on
-            2021-04-01
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#BigData" title="BigData">BigData</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
 
 <ul class="pager">
     
+    
+        <li class="next">
+            <a href="/archives/2/">Older Posts &rarr;</a>
+        </li>
     
 </ul>
 
@@ -500,11 +575,11 @@ rxmcst/s：每秒钟接收的多播数据包
     <div class="tags">
         
             
-            <a href="/tags/#Linux" title="Linux" rel="1">Linux</a>
+            <a href="/tags/#BigData" title="BigData" rel="8">BigData</a>
             
         
             
-            <a href="/tags/#BigData" title="BigData" rel="3">BigData</a>
+            <a href="/tags/#Linux" title="Linux" rel="1">Linux</a>
             
         
             
@@ -591,23 +666,23 @@ rxmcst/s：每秒钟接收的多播数据包
     <ul>
       
         <li>
-          <a href="/article/HDFS架构设计/">HDFS架构设计</a>
+          <a href="/article/HDFS HA/">HDFS NameNode 高可用</a>
         </li>
       
         <li>
-          <a href="/article/HDFS集群部署/">HDFS集群部署</a>
+          <a href="/article/HDFS 读写流程/">HDFS 读写流程</a>
         </li>
       
         <li>
-          <a href="/article/RocketMQ消息存储/">[RocketMQ] RocketMQ消息存储</a>
+          <a href="/article/HDFS 副本放置策略/">HDFS 副本放置策略</a>
         </li>
       
         <li>
-          <a href="/article/RocketMQ架构/">[RocketMQ] RocketMQ整体架构</a>
+          <a href="/article/HDFS 元数据持久化机制/">HDFS NameNode元数据持久化机制</a>
         </li>
       
         <li>
-          <a href="/article/RocketMQ网络模型/">[RocketMQ] RocketMQ网络模型</a>
+          <a href="/article/HDFS 安全模式/">HDFS 安全模式</a>
         </li>
       
     </ul>
@@ -618,7 +693,7 @@ rxmcst/s：每秒钟接收的多播数据包
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a><span class="archive-list-count">7</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a><span class="archive-list-count">12</span></li></ul>
     </div>
 
         <hr>

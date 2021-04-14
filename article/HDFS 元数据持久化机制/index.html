@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          [RocketMQ] RocketMQ整体架构 - WenShan Zheng| zhengws | 郑文山
+          HDFS NameNode元数据持久化机制 - WenShan Zheng| zhengws | 郑文山
         
     </title>
 
-    <link rel="canonical" href="https://zhengwenshan.github.io/article/RocketMQ架构/">
+    <link rel="canonical" href="https://zhengwenshan.github.io/article/HDFS 元数据持久化机制/">
     <!-- fancybox support -->
     
       <link rel="stylesheet" href="/js/fancybox/jquery.fancybox.min.css">
@@ -91,14 +91,14 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#RocketMQ" title="RocketMQ">RocketMQ</a>
+                              <a class="tag" href="/tags/#BigData" title="BigData">BigData</a>
                             
                         </div>
-                        <h1>[RocketMQ] RocketMQ整体架构</h1>
+                        <h1>HDFS NameNode元数据持久化机制</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by zhengws on
-                            2021-04-07
+                            2021-04-11
                         </span>
                     </div>
                 
@@ -215,60 +215,70 @@
                 col-md-8 col-md-offset-1
                 post-container">
 
-                <h1 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h1><hr>
-<h2 id="1-技术架构"><a href="#1-技术架构" class="headerlink" title="1 技术架构"></a>1 技术架构</h2><p><img src="/images/RocketMQ/rocketmq_architecture_1.png" alt></p>
-<p>RocketMQ架构上主要分为四部分:</p>
-<ul>
-<li><p>Producer：消息发布的角色，支持分布式集群方式部署。Producer通过MQ的负载均衡模块选择相应的Broker集群队列进行消息投递，投递的过程支持快速失败并且低延迟。</p>
-</li>
-<li><p>Consumer：消息消费的角色，支持分布式集群方式部署。支持以push推，pull拉两种模式对消息进行消费，同时也支持集群方式和广播方式的消费。</p>
-</li>
-<li><p>NameServer：简单的Topic路由注册中心，支持Broker的动态注册与发现。主要包括两个功能：</p>
-<ul>
-<li>Broker管理，NameServer接受Broker集群的注册信息并且保存下来作为路由信息的基本数据。基于心跳检测机制，检查Broker是否还存活；</li>
-<li>路由信息管理，每个NameServer将保存关于Broker集群的整个路由信息和用于客户端查询的队列信息。Producer和Conumser通过NameServer就可以知道整个Broker集群的路由信息，从而进行消息的投递和消费。<blockquote>
-<p>NameServer通常也是集群的方式部署，各实例间相互不进行信息通讯。<br>Broker是向每一台NameServer注册自己的路由信息，所以每一个NameServer实例上面都保存一份完整的路由信息。<br>当某个NameServer因某种原因下线了，Broker仍然可以向其它NameServer同步其路由信息，Producer,Consumer仍然可以动态感知Broker的路由的信息。 </p>
-</blockquote>
-</li>
-</ul>
-</li>
-<li><p>BrokerServer：Broker主要负责消息的存储、投递和查询以及服务高可用保证，为了实现这些功能，Broker包含了以下几个重要子模块。</p>
+                <h1 id="一-业界内存持久化方案"><a href="#一、-业界内存持久化方案" class="headerlink" title="一、 业界内存持久化方案"></a>一、 业界内存持久化方案</h1><p>基于内存存储必然存在掉电即失及内存空间受限问题，因此必须采用一种持久化机制，来保证数据的可靠性。那么如何来持久化数据呢？业界上基本上有以下两种方式来处理</p>
 <ol>
-<li>Remoting Module：整个Broker的实体，负责处理来自clients端的请求。</li>
-<li>Client Manager：负责管理客户端(Producer/Consumer)和维护Consumer的Topic订阅信息</li>
-<li>Store Service：提供方便简单的API接口处理消息存储到物理硬盘和查询功能。</li>
-<li>HA Service：高可用服务，提供Master Broker 和 Slave Broker之间的数据同步功能。</li>
-<li>Index Service：根据特定的Message key对投递到Broker的消息进行索引服务，以提供消息的快速查询。</li>
-</ol>
-</li>
-</ul>
-<p><img src="/images/RocketMQ/rocketmq_architecture_2.png" alt></p>
-<h2 id="2-部署架构"><a href="#2-部署架构" class="headerlink" title="2 部署架构"></a>2 部署架构</h2><p><img src="/images/RocketMQ/rocketmq_architecture_3.png" alt></p>
-<h3 id="rocketmq-网络部署特点"><a href="#RocketMQ-网络部署特点" class="headerlink" title="RocketMQ 网络部署特点"></a>RocketMQ 网络部署特点</h3><ul>
-<li><p>NameServer是一个几乎无状态节点，可集群部署，节点之间无任何信息同步。</p>
-</li>
-<li><p>Broker部署相对复杂，Broker分为Master与Slave，一个Master可以对应多个Slave，但是一个Slave只能对应一个Master，Master与Slave 的对应关系通过指定相同的BrokerName，不同的BrokerId 来定义，BrokerId为0表示Master，非0表示Slave。Master也可以部署多个。每个Broker与NameServer集群中的所有节点建立长连接，定时注册Topic信息到所有NameServer。</p>
-<blockquote>
-<p>注意：当前RocketMQ版本在部署架构上支持一Master多Slave，但只有BrokerId=1的从服务器才会参与消息的读负载。</p>
-</blockquote>
-</li>
-<li><p>Producer与NameServer集群中的其中一个节点（随机选择）建立长连接，定期从NameServer获取Topic路由信息，并向提供Topic 服务的Master建立长连接，且定时向Master发送心跳。Producer完全无状态，可集群部署。</p>
-</li>
-<li><p>Consumer与NameServer集群中的其中一个节点（随机选择）建立长连接，定期从NameServer获取Topic路由信息，并向提供Topic服务的Master、Slave建立长连接，且定时向Master、Slave发送心跳。</p>
-<blockquote>
-<p>Consumer既可以从Master订阅消息，也可以从Slave订阅消息，消费者在向Master拉取消息时，Master服务器会根据拉取偏移量与最大偏移量的距离（判断是否读老消息，产生读I/O），以及从服务器是否可读等因素建议下一次是从Master还是Slave拉取。</p>
-</blockquote>
-</li>
-</ul>
-<p>结合部署架构图，描述集群工作流程：</p>
+<li><p>内存镜像定期落盘(FsImage)</p>
 <ul>
-<li>启动NameServer，NameServer起来后监听端口，等待Broker、Producer、Consumer连上来，相当于一个路由控制中心。</li>
-<li>Broker启动，跟所有的NameServer保持长连接，定时发送心跳包。心跳包中包含当前Broker信息(IP+端口等)以及存储所有Topic信息。注册成功后，NameServer集群中就有Topic跟Broker的映射关系。</li>
-<li>收发消息前，先创建Topic，创建Topic时需要指定该Topic要存储在哪些Broker上，也可以在发送消息时自动创建Topic。</li>
-<li>Producer发送消息，启动时先跟NameServer集群中的其中一台建立长连接，并从NameServer中获取当前发送的Topic存在哪些Broker上，轮询从队列列表中选择一个队列，然后与队列所在的Broker建立长连接从而向Broker发消息。</li>
-<li>Consumer跟Producer类似，跟其中一台NameServer建立长连接，获取当前订阅Topic存在哪些Broker上，然后直接跟Broker建立连接通道，开始消费消息。</li>
+<li><p>优点：</p>
+<ul>
+<li>服务重启，恢复速度快，体积与内存相当</li>
+<li>可任意恢复到特定时间节点数据</li>
 </ul>
-
+<blockquote>
+<p>比如 1点、2点、3点各自持久化一次镜像文件，保留了三个镜像文件，那么可以任意恢复到指定的时间节点上</p>
+</blockquote>
+</li>
+<li><p>缺点：</p>
+</li>
+<li><p>单次持久化磁盘，性能损耗</p>
+<blockquote>
+<p>将内存全量数据刷到磁盘，必会进行大量的IO操作，对机器性能产生损耗。</p>
+</blockquote>
+</li>
+<li><p>数据丢失多</p>
+<blockquote>
+<p>由于每次持久化消耗大量IO资源，那么必然不能频繁进行持久化操作，因此会最大会丢失持久化时间间隔长度的数据</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>记录实时日志(editlog)</p>
+<ul>
+<li>优点：</li>
+<li><p>数据完整性，丢失少。</p>
+<blockquote>
+<p>针对这种元数据变化较少的数据，采用editlog可以每次同步刷盘持久化数据，如果针对数据变更较为频繁的，其实也不能进行同步刷盘，必然会导致性能下降，其实主要还是基于业务特性及数据重要程度来进行选择。</p>
+</blockquote>
+</li>
+<li><p>缺点：</p>
+</li>
+<li><p>重启服务，加载速度慢, 并有体积膨胀风险</p>
+<blockquote>
+<p>日志记录是一个持续性动作，由于日积月累那么日志文件必然会越积越多，文件大小膨胀。然而当服务重启时，则需要一步步读取editlog中的记录，然后一条条执行，其实里面有很多是重复操作了同一条数据，甚至进行创建了后又删除了这种动作，相当于浪费资源了。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ol>
+<h1 id="二-namenode内存持久化方式"><a href="#二、NameNode内存持久化方式" class="headerlink" title="二、NameNode内存持久化方式"></a>二、NameNode内存持久化方式</h1><p>NameNode 吸取了以上两种方式的优点，采用了FsImage + EditLog整合的方案，滚动将EditLog更新到FsImage, 以保证更近时点的FsImage和更小的EditLog体积。具体流程如图所示：</p>
+<ol>
+<li><p>NameNode 与 SecondaryNode交互图<br><img src="/images/HDFS/namenode_save1.png" alt></p>
+</li>
+<li><p>持久化具体业务处理流程<br><img src="/images/HDFS/namenode_save.png" alt></p>
+</li>
+</ol>
+<h1 id="三-元数据持久化处理日志打印"><a href="#三、元数据持久化处理日志打印" class="headerlink" title="三、元数据持久化处理日志打印"></a>三、元数据持久化处理日志打印</h1><ol>
+<li>NameNode启动加载fsImage与EditLog</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">2021-04-14 02:33:52,801 INFO org.apache.hadoop.hdfs.server.namenode.FSImageFormatPBINode: Loading 1 INodes.</span><br><span class="line">2021-04-14 02:33:52,889 INFO org.apache.hadoop.hdfs.server.namenode.FSImageFormatProtobuf: Loaded FSImage in 0 seconds.</span><br><span class="line">2021-04-14 02:33:52,890 INFO org.apache.hadoop.hdfs.server.namenode.FSImage: Loaded image for txid 2 from /var/bigdata/hadoop/full/dfs/name/current/fsimage_0000000000000000002</span><br><span class="line">2021-04-14 02:33:52,890 INFO org.apache.hadoop.hdfs.server.namenode.FSImage: Reading org.apache.hadoop.hdfs.server.namenode.RedundantEditLogInputStream@25b2cfcb expecting start txid #3</span><br><span class="line">2021-04-14 02:33:52,890 INFO org.apache.hadoop.hdfs.server.namenode.FSImage: Start loading edits file /var/bigdata/hadoop/full/dfs/name/current/edits_0000000000000000003-0000000000000000011</span><br><span class="line">2021-04-14 02:33:52,893 INFO org.apache.hadoop.hdfs.server.namenode.EditLogInputStream: Fast-forwarding stream &apos;/var/bigdata/hadoop/full/dfs/name/current/edits_0000000000000000003-0000000000000000011&apos; to transaction ID 3</span><br><span class="line">2021-04-14 02:33:52,936 INFO org.apache.hadoop.hdfs.server.namenode.FSImage: Edits file /var/bigdata/hadoop/full/dfs/name/current/edits_0000000000000000003-0000000000000000011 of size 1048576 edits # 9 loaded in 0 seconds</span><br><span class="line">2021-04-14 02:33:52,937 INFO org.apache.hadoop.hdfs.server.namenode.FSNamesystem: Need to save fs image? true (staleImage=true, haEnabled=false, isRollingUpgrade=false)</span><br><span class="line">2021-04-14 02:33:52,937 INFO org.apache.hadoop.hdfs.server.namenode.FSImage: Save namespace ...</span><br><span class="line">2021-04-14 02:33:52,940 INFO org.apache.hadoop.hdfs.server.namenode.FSImageFormatProtobuf: Saving image file /var/bigdata/hadoop/full/dfs/name/current/fsimage.ckpt_0000000000000000011 using no compression</span><br><span class="line">2021-04-14 02:33:53,148 INFO org.apache.hadoop.hdfs.server.namenode.FSImageFormatProtobuf: Image file /var/bigdata/hadoop/full/dfs/name/current/fsimage.ckpt_0000000000000000011 of size 551 bytes saved in 0 seconds.</span><br><span class="line">2021-04-14 02:33:53,206 INFO org.apache.hadoop.hdfs.server.namenode.NNStorageRetentionManager: Going to retain 2 images with txid &gt;= 2</span><br><span class="line">2021-04-14 02:33:53,206 INFO org.apache.hadoop.hdfs.server.namenode.NNStorageRetentionManager: Purging old image FSImageFile(file=/var/bigdata/hadoop/full/dfs/name/current/fsimage_0000000000000000000, cpktTxId=0000000000000000000)</span><br><span class="line">2021-04-14 02:33:53,237 INFO org.apache.hadoop.hdfs.server.namenode.FSEditLog: Starting log segment at 12</span><br><span class="line">2021-04-14 02:33:53,454 INFO org.apache.hadoop.hdfs.server.namenode.NameCache: initialized with 0 entries 0 lookups</span><br><span class="line">2021-04-14 02:33:53,454 INFO org.apache.hadoop.hdfs.server.namenode.FSNamesystem: Finished loading FSImage in 1206 msecs</span><br></pre></td></tr></table></figure>
+<ol>
+<li>NameNode 接收到SecondaryNode 合并请求处理过程</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">2021-04-14 04:35:04,184 INFO org.apache.hadoop.hdfs.server.namenode.FSNamesystem: Roll Edit Log from 192.168.5.11</span><br><span class="line">2021-04-14 04:35:04,184 INFO org.apache.hadoop.hdfs.server.namenode.FSEditLog: Rolling edit logs</span><br><span class="line">2021-04-14 04:35:04,184 INFO org.apache.hadoop.hdfs.server.namenode.FSEditLog: Ending log segment 16</span><br><span class="line">2021-04-14 04:35:04,185 INFO org.apache.hadoop.hdfs.server.namenode.FSEditLog: Number of transactions: 2 Total time for transactions(ms): 1 Number of transactions batched in Syncs: 0 Number of syncs: 2 SyncTimes(ms): 8 </span><br><span class="line">2021-04-14 04:35:04,188 INFO org.apache.hadoop.hdfs.server.namenode.FSEditLog: Number of transactions: 2 Total time for transactions(ms): 1 Number of transactions batched in Syncs: 0 Number of syncs: 3 SyncTimes(ms): 11 </span><br><span class="line">2021-04-14 04:35:04,188 INFO org.apache.hadoop.hdfs.server.namenode.FileJournalManager: Finalizing edits file /var/bigdata/hadoop/full/dfs/name/current/edits_inprogress_0000000000000000016 -&gt; /var/bigdata/hadoop/full/dfs/name/current/edits_0000000000000000016-0000000000000000017</span><br><span class="line">2021-04-14 04:35:04,188 INFO org.apache.hadoop.hdfs.server.namenode.FSEditLog: Starting log segment at 18</span><br><span class="line">2021-04-14 04:35:04,226 INFO org.apache.hadoop.hdfs.server.namenode.TransferFsImage: Transfer took 0.00s at 0.00 KB/s</span><br><span class="line">2021-04-14 04:35:04,226 INFO org.apache.hadoop.hdfs.server.namenode.TransferFsImage: Downloaded file fsimage.ckpt_0000000000000000017 size 551 bytes.</span><br><span class="line">2021-04-14 04:35:04,231 INFO org.apache.hadoop.hdfs.server.namenode.NNStorageRetentionManager: Going to retain 2 images with txid &gt;= 15</span><br><span class="line">2021-04-14 04:35:04,231 INFO org.apache.hadoop.hdfs.server.namenode.NNStorageRetentionManager: Purging old image FSImageFile(file=/var/bigdata/hadoop/full/dfs/name/current/fsimage_0000000000000000013, cpktTxId=0000000000000000013)</span><br></pre></td></tr></table></figure>
+<ol>
+<li>SecondaryNode 发起doChecked 处理过程</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">2021-04-14 04:35:04,230 INFO org.apache.hadoop.hdfs.server.namenode.SecondaryNameNode: Image has not changed. Will not download image.</span><br><span class="line">2021-04-14 04:35:04,230 INFO org.apache.hadoop.hdfs.server.namenode.TransferFsImage: Opening connection to http://node01:50070/imagetransfer?getedit=1&amp;startTxId=16&amp;endTxId=17&amp;storageInfo=-60:962422596:0:CID-e012b5b6-3364-44c4-a502-f96f526383b7</span><br><span class="line">2021-04-14 04:35:04,235 INFO org.apache.hadoop.hdfs.server.namenode.TransferFsImage: Transfer took 0.00s at 0.00 KB/s</span><br><span class="line">2021-04-14 04:35:04,235 INFO org.apache.hadoop.hdfs.server.namenode.TransferFsImage: Downloaded file edits_tmp_0000000000000000016-0000000000000000017_0000000000011326748 size 0 bytes.</span><br><span class="line">2021-04-14 04:35:04,235 INFO org.apache.hadoop.hdfs.server.namenode.Checkpointer: Checkpointer about to load edits from 1 stream(s).</span><br><span class="line">2021-04-14 04:35:04,235 INFO org.apache.hadoop.hdfs.server.namenode.FSImage: Reading /var/bigdata/hadoop/full/dfs/secondary/current/edits_0000000000000000016-0000000000000000017 expecting start txid #16</span><br><span class="line">2021-04-14 04:35:04,235 INFO org.apache.hadoop.hdfs.server.namenode.FSImage: Start loading edits file /var/bigdata/hadoop/full/dfs/secondary/current/edits_0000000000000000016-0000000000000000017</span><br><span class="line">2021-04-14 04:35:04,235 INFO org.apache.hadoop.hdfs.server.namenode.FSImage: Edits file /var/bigdata/hadoop/full/dfs/secondary/current/edits_0000000000000000016-0000000000000000017 of size 42 edits # 2 loaded in 0 seconds</span><br><span class="line">2021-04-14 04:35:04,236 INFO org.apache.hadoop.hdfs.server.namenode.FSImageFormatProtobuf: Saving image file /var/bigdata/hadoop/full/dfs/secondary/current/fsimage.ckpt_0000000000000000017 using no compression</span><br><span class="line">2021-04-14 04:35:04,238 INFO org.apache.hadoop.hdfs.server.namenode.FSImageFormatProtobuf: Image file /var/bigdata/hadoop/full/dfs/secondary/current/fsimage.ckpt_0000000000000000017 of size 551 bytes saved in 0 seconds.</span><br><span class="line">2021-04-14 04:35:04,244 INFO org.apache.hadoop.hdfs.server.namenode.NNStorageRetentionManager: Going to retain 2 images with txid &gt;= 15</span><br><span class="line">2021-04-14 04:35:04,244 INFO org.apache.hadoop.hdfs.server.namenode.NNStorageRetentionManager: Purging old image FSImageFile(file=/var/bigdata/hadoop/full/dfs/secondary/current/fsimage_0000000000000000013, cpktTxId=0000000000000000013)</span><br><span class="line">2021-04-14 04:35:04,261 INFO org.apache.hadoop.hdfs.server.namenode.TransferFsImage: Uploaded image with txid 17 to namenode at http://node01:50070 in 0.013 seconds</span><br><span class="line">2021-04-14 04:35:04,262 WARN org.apache.hadoop.hdfs.server.namenode.SecondaryNameNode: Checkpoint done. New Image Size: 551</span><br></pre></td></tr></table></figure>
                 
 
                 <hr>
@@ -276,12 +286,12 @@
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/article/RocketMQ消息存储/" data-toggle="tooltip" data-placement="top" title="[RocketMQ] RocketMQ消息存储">&larr; Previous Post</a>
+                            <a href="/article/HDFS 副本放置策略/" data-toggle="tooltip" data-placement="top" title="HDFS 副本放置策略">&larr; Previous Post</a>
                         </li>
                     
                     
                         <li class="next">
-                            <a href="/article/RocketMQ网络模型/" data-toggle="tooltip" data-placement="top" title="[RocketMQ] RocketMQ网络模型">Next Post &rarr;</a>
+                            <a href="/article/HDFS 安全模式/" data-toggle="tooltip" data-placement="top" title="HDFS 安全模式">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -322,7 +332,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#架构设计"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">架构设计</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-技术架构"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">1 技术架构</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-部署架构"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">2 部署架构</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#rocketmq-网络部署特点"><span class="toc-nav-number">1.2.1.</span> <span class="toc-nav-text">RocketMQ 网络部署特点</span></a></li></ol></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一-业界内存持久化方案"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">一、 业界内存持久化方案</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二-namenode内存持久化方式"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">二、NameNode内存持久化方式</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三-元数据持久化处理日志打印"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">三、元数据持久化处理日志打印</span></a></li></ol>
         
         </div>
       </aside>
@@ -342,7 +352,7 @@
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#RocketMQ" title="RocketMQ">RocketMQ</a>
+                          <a class="tag" href="/tags/#BigData" title="BigData">BigData</a>
                         
                     </div>
                 </section>

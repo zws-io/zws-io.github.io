@@ -7,8 +7,48 @@
     </url>
 
     <url>
+        <loc>https://zhengwenshan.github.io/article/HDFS%20HA/</loc>
+        <lastmod>2021-04-14T12:35:26.777Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://zhengwenshan.github.io/article/HDFS%20%E5%85%83%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6/</loc>
+        <lastmod>2021-04-14T12:29:56.374Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://zhengwenshan.github.io/article/HDFS%20%E5%89%AF%E6%9C%AC%E6%94%BE%E7%BD%AE%E7%AD%96%E7%95%A5/</loc>
+        <lastmod>2021-04-14T12:29:32.927Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://zhengwenshan.github.io/article/HDFS%20%E8%AF%BB%E5%86%99%E6%B5%81%E7%A8%8B/</loc>
+        <lastmod>2021-04-14T12:29:19.831Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://zhengwenshan.github.io/article/HDFS%20%E5%AE%89%E5%85%A8%E6%A8%A1%E5%BC%8F/</loc>
+        <lastmod>2021-04-14T12:29:06.421Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://zhengwenshan.github.io/article/HDFS%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</loc>
-        <lastmod>2021-04-14T11:31:20.821Z</lastmod>
+        <lastmod>2021-04-14T12:16:46.747Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -47,7 +87,7 @@
     </url>
 
     <url>
-        <loc>https://zhengwenshan.github.io/article/RocketMQ%E6%B6%88%E6%81%AF%E5%AD%98%E5%82%A8/</loc>
+        <loc>https://zhengwenshan.github.io/article/RocketMQ%E6%9E%B6%E6%9E%84/</loc>
         <lastmod>2021-04-09T13:30:13.807Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -55,7 +95,7 @@
     </url>
 
     <url>
-        <loc>https://zhengwenshan.github.io/article/RocketMQ%E6%9E%B6%E6%9E%84/</loc>
+        <loc>https://zhengwenshan.github.io/article/RocketMQ%E6%B6%88%E6%81%AF%E5%AD%98%E5%82%A8/</loc>
         <lastmod>2021-04-09T13:30:13.807Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
