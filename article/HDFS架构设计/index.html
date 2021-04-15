@@ -145,13 +145,6 @@
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
                             <a href="/about/">About</a>
                         </li>
                         
@@ -160,6 +153,13 @@
                         
                         <li>
                             <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
@@ -215,16 +215,21 @@
                 col-md-8 col-md-offset-1
                 post-container">
 
-                <h1 id="一-hdfs架构设计"><a href="#一、HDFS架构设计" class="headerlink" title="一、HDFS架构设计"></a>一、HDFS架构设计</h1><h2 id="11-整体架构"><a href="#1-1-整体架构" class="headerlink" title="1.1 整体架构"></a>1.1 整体架构</h2><p>HDFS是一个主从(Master/Slave)架构，由一个NameNode和一些DataNode组成，NameNode负责存储和管理文件元数据(metadata)，并维护一个层次型的文件目录树，而DataNode则负责存储文件数据(block块)，提供block块的读写，并与NameNode维持心跳，上报自身持有的block块信息.</p>
+                <h1 id="一-hdfs架构设计">一、HDFS架构设计</h1>
+<h2 id="11-整体架构">1.1 整体架构</h2>
+<p>HDFS是一个主从(Master/Slave)架构，由一个NameNode和一些DataNode组成，NameNode负责存储和管理文件元数据(metadata)，并维护一个层次型的文件目录树，而DataNode则负责存储文件数据(block块)，提供block块的读写，并与NameNode维持心跳，上报自身持有的block块信息.</p>
 <p><img src="/images/HDFS/hdfs_architecture.png" alt></p>
-<h2 id="12-角色功能"><a href="#1-2-角色功能" class="headerlink" title="1.2 角色功能"></a>1.2 角色功能</h2><ul>
-<li>NameNode<ul>
+<h2 id="12-角色功能">1.2 角色功能</h2>
+<ul>
+<li>NameNode
+<ul>
 <li>完全基于内存存储文件元数据、目录结构、文件block映射</li>
 <li>需要持久化，来保证数据可靠性(fsimage + editlog)</li>
 <li>提供副本放置策略 (提高容错性)</li>
 </ul>
 </li>
-<li>DataNode<ul>
+<li>DataNode
+<ul>
 <li>基于本地磁盘存储block块(原始文件形式,非二进制)</li>
 <li>保存block校验和，保证数据的可靠性</li>
 <li>与NameNode维持心跳，汇报block列表状态</li>
@@ -239,7 +244,7 @@
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/article/HDFS 安全模式/" data-toggle="tooltip" data-placement="top" title="HDFS 安全模式">&larr; Previous Post</a>
+                            <a href="/article/HDFS 元数据持久化机制/" data-toggle="tooltip" data-placement="top" title="HDFS NameNode元数据持久化机制">&larr; Previous Post</a>
                         </li>
                     
                     

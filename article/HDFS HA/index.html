@@ -145,13 +145,6 @@
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
                             <a href="/about/">About</a>
                         </li>
                         
@@ -160,6 +153,13 @@
                         
                         <li>
                             <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
@@ -215,19 +215,28 @@
                 col-md-8 col-md-offset-1
                 post-container">
 
-                <h1 id="一-需求背景"><a href="#一、需求背景" class="headerlink" title="一、需求背景"></a>一、需求背景</h1><p>从前面了解到的 HDFS NameNode其实只有一个主，另外一个SecondaryNode其实仅仅只是做FsImage与EditLog 滚动式合并的作用，压根就没有承载来着client的流量，另外更为致命的是如果NameNode挂掉后，整个系统就蹦了，无法对外提供服务。然而，对于分布式文件系统，其作为各种计算的底层存储技术，对可用性要求极高，不能因为服务不可用而导致上层业务不可用。那么HDFS NameNode是如何实现高可用的呢？</p>
-<h1 id="二-namenode面临的挑战"><a href="#二、NameNode面临的挑战" class="headerlink" title="二、NameNode面临的挑战"></a>二、NameNode面临的挑战</h1><ol>
+                <h1 id="一-需求背景">一、需求背景</h1>
+<p>从前面了解到的 HDFS NameNode其实只有一个主，另外一个SecondaryNode其实仅仅只是做FsImage与EditLog 滚动式合并的作用，压根就没有承载来着client的流量，另外更为致命的是如果NameNode挂掉后，整个系统就蹦了，无法对外提供服务。然而，对于分布式文件系统，其作为各种计算的底层存储技术，对可用性要求极高，不能因为服务不可用而导致上层业务不可用。那么HDFS NameNode是如何实现高可用的呢？</p>
+<h1 id="二-namenode面临的挑战">二、NameNode面临的挑战</h1>
+<ol>
 <li>单点故障，集群整体不可用【HA模式】</li>
 <li>压力过大，内存受限【联邦】</li>
 </ol>
-<h1 id="三-namenode高可用解决方案"><a href="#三、NameNode高可用解决方案" class="headerlink" title="三、NameNode高可用解决方案"></a>三、NameNode高可用解决方案</h1><p>基于以上NameNode面临的挑战，分别提出两种不同的解决方案，且之间是不相关的。</p>
-<h2 id="31-namenode-ha"><a href="#3-1-NameNode-HA" class="headerlink" title="3.1 NameNode HA"></a>3.1 NameNode HA</h2><p>通常在HA集群中，将分别部署两个NameNode在不同的机器上，并且确保在同一时间只有一个NameNode处于Active,另外一个则处于Standby状态。这个Active NameNode则响应集群中客户端的操作，Standby仅仅作为备份，保持数据状态足够完整，确保如果Active故障时能够进行快速转移。那么，如何实现Standy与Active进行实时同步呢？</p>
-<h3 id="311-主备同步场景分析"><a href="#3-1-1-主备同步场景分析" class="headerlink" title="3.1.1 主备同步场景分析"></a>3.1.1 主备同步场景分析</h3><ol>
-<li>方式一：Active接收到客户端变更操作时，则同步发送给Standby，Active等待Standby更新成功后，再返回客户端。<br>  这种方式，其实缺点也很明显。首先，增加了Active同步给Standby的同步等待时间，其次，如果Standby服务不可用呢？那势必造成Active也不可用？本身我们HA的出发点，是为了解决Active单点故障，解决服务不可用，这样反而引入了新的服务不可用问题。因此该方式不可取</li>
-<li>方式二：借助第三方分布式组件协助完成<br>  缺点：引入第三方分布式存储介质<br>  优点：能确保Active在怪掉之前，完成变更记录</li>
+<h1 id="三-namenode高可用解决方案">三、NameNode高可用解决方案</h1>
+<p>基于以上NameNode面临的挑战，分别提出两种不同的解决方案，且之间是不相关的。</p>
+<h2 id="31-namenode-ha">3.1 NameNode HA</h2>
+<p>通常在HA集群中，将分别部署两个NameNode在不同的机器上，并且确保在同一时间只有一个NameNode处于Active,另外一个则处于Standby状态。这个Active NameNode则响应集群中客户端的操作，Standby仅仅作为备份，保持数据状态足够完整，确保如果Active故障时能够进行快速转移。那么，如何实现Standy与Active进行实时同步呢？</p>
+<h3 id="311-主备同步场景分析">3.1.1 主备同步场景分析</h3>
+<ol>
+<li>方式一：Active接收到客户端变更操作时，则同步发送给Standby，Active等待Standby更新成功后，再返回客户端。<br>
+这种方式，其实缺点也很明显。首先，增加了Active同步给Standby的同步等待时间，其次，如果Standby服务不可用呢？那势必造成Active也不可用？本身我们HA的出发点，是为了解决Active单点故障，解决服务不可用，这样反而引入了新的服务不可用问题。因此该方式不可取</li>
+<li>方式二：借助第三方分布式组件协助完成<br>
+缺点：引入第三方分布式存储介质<br>
+优点：能确保Active在怪掉之前，完成变更记录</li>
 </ol>
-<h3 id="312-hdfs-ha实现方式"><a href="#3-1-2-HDFS-HA实现方式" class="headerlink" title="3.1.2 HDFS HA实现方式"></a>3.1.2 HDFS HA实现方式</h3><ol>
-<li>Active与Standby都与JouranalNodes进行交互，当Active接收到namesapce 任何变更时，则会将修改记录发送给JNs, 然后Standby读取并监听JNs变更记录，更新自身的namespace. </li>
+<h3 id="312-hdfs-ha实现方式">3.1.2 HDFS HA实现方式</h3>
+<ol>
+<li>Active与Standby都与JouranalNodes进行交互，当Active接收到namesapce 任何变更时，则会将修改记录发送给JNs, 然后Standby读取并监听JNs变更记录，更新自身的namespace.</li>
 <li>当Standby 收到故障转移事件时，Standby必须确保已读取了JNs中的所有变更日志，确保自身的namespace是完整的, 才能将自己的状态升级为Active状态。</li>
 <li>HA需要能够确保同一时间，只有一台NameNode处于Active状态，否则会出现两边数据不一致等错误。因此JournalNodes同一时间，只允许一台NameNode写入日志。</li>
 </ol>
@@ -235,16 +244,24 @@
 <p>从以上HA实现分析来看，其实HA强依赖了JNs, 那么JNs 必定不能是个单机，如果是单机，其实依然存在以上场景分析的问题，因此只能是集群。</p>
 </blockquote>
 <ol>
-<li>如何校验数据已经成功JNs？<br> JNs 自身采用了过半算法，只要集群中超过一半的节点写入成功，则返回Active写入成功了.</li>
-<li>JNs如何确保同一时间只有一台写入？<br> JNs接收到新的NameNode写入日志时，校验当前自身未被消费的队列是否为空，如果为空则才允许写入，否则拒绝。【仅是想法，待研究JNs代码后确认】</li>
+<li>如何校验数据已经成功JNs？<br>
+JNs 自身采用了过半算法，只要集群中超过一半的节点写入成功，则返回Active写入成功了.</li>
+<li>JNs如何确保同一时间只有一台写入？<br>
+JNs接收到新的NameNode写入日志时，校验当前自身未被消费的队列是否为空，如果为空则才允许写入，否则拒绝。【仅是想法，待研究JNs代码后确认】</li>
 </ol>
-<h2 id="32-ha实现自动切换"><a href="#3-2-HA实现自动切换" class="headerlink" title="3.2 HA实现自动切换"></a>3.2 HA实现自动切换</h2><p>HDFS HA 自动切换，是基于ZKFC节点与ZK，ZKFS部署在与NameNode同一服务器上，有助于监听NameNode的状态，同时另外一边连接ZK. NameNode节点领导者选举，则是依赖于ZKFC，各自NameNode所在的ZKFC则会在ZK上抢占创建节点，如果创建成功，则将本机的NameNode升级为Active状态，将对放的NameNode设置为Standby。</p>
-<h3 id="321-故障切换"><a href="#3-2-1-故障切换" class="headerlink" title="3.2.1 故障切换"></a>3.2.1 故障切换</h3><ol>
-<li>Active NameNode挂掉如何切换？<br> Active NameNode 挂掉，则本机的ZKFC节点感知到NameNode服务挂了，则会主动删除之前在ZK上注册的节点，然后ZK基于事件机制，通知处于备节点的ZKFC，当备节点的ZKFC接收到该事件后，则先通过SSH方式确认对端的NameNode确实已经挂掉了，如果未挂掉，则尝试将该节点置位Standby状态(有可能是ZKFC服务挂了，ZK节点过期自动删除触发的事件)，然后再去ZK节点上强占注册，注册成功后，才将本地的NameNode升级为Active 状态。</li>
-<li>Active NameNode 整机挂掉如何处理？<br>由于Active NameNode整机挂掉，因此在该服务器上的ZKFC与ZK必定断开了连接，那么ZK节点超时后，也会触发节点删除事件，备节点的ZKFC收到该事件之后，则阐释的通过SSH的方式连接到主节点，此时由于SSH连接不成功，因此ZKFC也无法确定到底是服务器挂了，还是本身网络不通，无法确认旧的Active是否已经挂掉，因此不能将自身升级为Active状态。【这种方式，如何解决呢？可以通过两台NameNode的服务器通过Console进行连接，就能感知到服务器之间是否可用】</li>
+<h2 id="32-ha实现自动切换">3.2 HA实现自动切换</h2>
+<p>HDFS HA 自动切换，是基于ZKFC节点与ZK，ZKFS部署在与NameNode同一服务器上，有助于监听NameNode的状态，同时另外一边连接ZK. NameNode节点领导者选举，则是依赖于ZKFC，各自NameNode所在的ZKFC则会在ZK上抢占创建节点，如果创建成功，则将本机的NameNode升级为Active状态，将对放的NameNode设置为Standby。</p>
+<h3 id="321-故障切换">3.2.1 故障切换</h3>
+<ol>
+<li>Active NameNode挂掉如何切换？<br>
+Active NameNode 挂掉，则本机的ZKFC节点感知到NameNode服务挂了，则会主动删除之前在ZK上注册的节点，然后ZK基于事件机制，通知处于备节点的ZKFC，当备节点的ZKFC接收到该事件后，则先通过SSH方式确认对端的NameNode确实已经挂掉了，如果未挂掉，则尝试将该节点置位Standby状态(有可能是ZKFC服务挂了，ZK节点过期自动删除触发的事件)，然后再去ZK节点上强占注册，注册成功后，才将本地的NameNode升级为Active 状态。</li>
+<li>Active NameNode 整机挂掉如何处理？<br>
+由于Active NameNode整机挂掉，因此在该服务器上的ZKFC与ZK必定断开了连接，那么ZK节点超时后，也会触发节点删除事件，备节点的ZKFC收到该事件之后，则阐释的通过SSH的方式连接到主节点，此时由于SSH连接不成功，因此ZKFC也无法确定到底是服务器挂了，还是本身网络不通，无法确认旧的Active是否已经挂掉，因此不能将自身升级为Active状态。【这种方式，如何解决呢？可以通过两台NameNode的服务器通过Console进行连接，就能感知到服务器之间是否可用】</li>
 </ol>
-<h3 id="322-整体架构图"><a href="#3-2-2-整体架构图" class="headerlink" title="3.2.2 整体架构图"></a>3.2.2 整体架构图</h3><p><img src="/images/HDFS/namenode_ha.png" alt></p>
-<h2 id="32-namenode-联邦"><a href="#3-2-NameNode-联邦" class="headerlink" title="3.2 NameNode 联邦"></a>3.2 NameNode 联邦</h2>
+<h3 id="322-整体架构图">3.2.2 整体架构图</h3>
+<p><img src="/images/HDFS/namenode_ha.png" alt></p>
+<h2 id="32-namenode-联邦">3.2 NameNode 联邦</h2>
+
                 
 
                 <hr>
