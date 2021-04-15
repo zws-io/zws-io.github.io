@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Linux命令 - WenShan Zheng| zhengws | 郑文山
+          WenShan Zheng| zhengws | 郑文山
         
     </title>
 
-    <link rel="canonical" href="https://zhengwenshan.github.io/article/Linux命令/">
+    <link rel="canonical" href="https://zhengwenshan.github.io/page/2/">
     <!-- fancybox support -->
     
       <link rel="stylesheet" href="/js/fancybox/jquery.fancybox.min.css">
@@ -74,8 +74,8 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/img/header_img/home_bg.jpg')
-            /*post*/
+            background-image: url('img/header_img/home_bg.jpg') 
+            /*config*/
         
     }
     
@@ -88,18 +88,10 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 
-                    <div class="post-heading">
-                        <div class="tags">
-                            
-                              <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
-                            
-                        </div>
-                        <h1>Linux命令</h1>
-                        <h2 class="subheading"></h2>
-                        <span class="meta">
-                            Posted by zhengws on
-                            2021-04-02
-                        </span>
+                    <div class="site-heading">
+                        <h1>郑文山</h1>
+                        <!--<hr class="small">-->
+                        <span class="subheading">个人博客</span>
                     </div>
                 
 
@@ -202,177 +194,262 @@
 
 
     <!-- Main Content -->
-    <!-- Modify by Yu-Hsuan Yen -->
+    <!-- Main Content -->
+<div class="container">
+    <div class="row">
+        
 
-<!-- Post Content -->
-<article>
-    <div class="container">
-        <div class="row">
-
-            <!-- Post Container -->
+<!-- USE SIDEBAR -->
+    <!-- Post Container -->
             <div class="
                 col-lg-8 col-lg-offset-1
                 col-md-8 col-md-offset-1
-                post-container">
+                col-sm-12
+                col-xs-12
+                post-container
+            ">
+            
+                <!-- Main Content -->
 
-                <h1 id="一-linux-网络诊断命令"><a href="#一、Linux-网络诊断命令" class="headerlink" title="一、Linux 网络诊断命令"></a>一、Linux 网络诊断命令</h1><h2 id="1-查看网络接口速率"><a href="#1、查看网络接口速率" class="headerlink" title="1、查看网络接口速率"></a>1、查看网络接口速率</h2><ul>
-<li>IFACE：ens192接口，网络设备的名称</li>
-<li>rxpck/s：每秒钟接收的数据包</li>
-<li>txpck/s：每秒钟发送的数据包</li>
-<li>rxbyt/s：每秒钟接收的字节数</li>
-<li>txbyt/s：每秒钟发送的字节数</li>
-<li>rxcmp/s：每秒钟接收的压缩数据包</li>
-<li>txcmp/s：每秒钟发送的压缩数据包</li>
-<li>rxmcst/s：每秒钟接收的多播数据包<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@manager-slave-1 ~]# sar -n DEV 2 5 </span><br><span class="line">Linux 3.10.0-862.el7.x86_64 (manager-slave-1.uc)        04/02/2021      _x86_64_        (8 CPU)</span><br><span class="line"></span><br><span class="line">03:14:39 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:41 PM    ens192    551.50    760.00    129.52    320.55      0.00      0.00      0.00</span><br><span class="line">03:14:41 PM        lo    650.00    650.00    305.23    305.23      0.00      0.00      0.00</span><br><span class="line"></span><br><span class="line">03:14:41 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:43 PM    ens192    706.00    821.50    112.94    238.73      0.00      0.00      0.00</span><br><span class="line">03:14:43 PM        lo    460.50    460.50    387.27    387.27      0.00      0.00      0.00</span><br><span class="line"></span><br><span class="line">03:14:43 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:45 PM    ens192    995.50   1105.50    270.77    375.79      0.00      0.00      0.00</span><br><span class="line">03:14:45 PM        lo    451.00    451.00    282.88    282.88      0.00      0.00      0.00</span><br><span class="line"></span><br><span class="line">03:14:45 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:47 PM    ens192    431.50    531.00     59.89    222.73      0.00      0.00      0.00</span><br><span class="line">03:14:47 PM        lo    332.00    332.00    242.30    242.30      0.00      0.00      0.00</span><br><span class="line"></span><br><span class="line">03:14:47 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s</span><br><span class="line">03:14:49 PM    ens192    852.00    912.00    108.38    230.29      0.00      0.00      0.00</span><br><span class="line">03:14:49 PM        lo    258.00    258.00    291.48    291.48      0.00      0.00      0.00</span><br></pre></td></tr></table></figure>
-</li>
+
+<div class="post-preview">
+
+    <a href="/article/Linux命令/">
+        <h2 class="post-title">
+                                 
+            Linux命令
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            一、Linux 网络诊断命令1、查看网络接口速率
+IFACE：ens192接口，网络设备的名称
+rxpck/s：每秒钟接收的数据包
+txpck/s：每秒钟发送的数据包
+rxbyt/s：每秒钟接收的字节数
+txbyt/s：每秒钟发送的字节数
+rxcmp/s：每秒钟接收的压缩数据包
+txcmp/s：每秒钟发送的压缩数据包
+rxmcst/s：每秒钟接收的多播数据包12345678910111213......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by zhengws on
+            2021-04-02
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Linux" title="Linux">Linux</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/article/HDFS启蒙/">
+        <h2 class="post-title">
+                                 
+            HDFS启蒙
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            一、技术思考每个技术的产生，其实都是有它存在的背景及其价值，在学习一个技术前，先搞懂该技术存在的意义，才能在学习过程中掌握该项技术的精髓所在，而不会陷入因为学习而学习，最终还是没搞懂其主要解决什么问题。接下来我们先来看看，普通单机场景下，我们是如何来处理海量数据？
+二、单机处理海量数据首先我们来思考下以下两种场景，普通单机程序如何进行处理，怎样较少IO，提升效率？
+2.1 案例一
+给你1T的......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by zhengws on
+            2021-04-01
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#BigData" title="BigData">BigData</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+
+
+<!-- Pager -->
+
+<ul class="pager">
+    
+        <li class="previous">
+            <a href="/">&larr; Newer Posts</a>
+        </li>
+    
+    
 </ul>
-<h2 id="2vim-快捷命令"><a href="#2-Vim-快捷命令" class="headerlink" title="2.Vim 快捷命令"></a>2.Vim 快捷命令</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">r: 替换某个字节</span><br><span class="line">ndw: 光标定位单次第一个位置，快速删除单词</span><br><span class="line">D: 快速删除光标后面所有字符</span><br></pre></td></tr></table></figure>
 
-                
 
-                <hr>
-                <!-- Pager -->
-                <ul class="pager">
-                    
-                        <li class="previous">
-                            <a href="/article/RocketMQ架构/" data-toggle="tooltip" data-placement="top" title="[RocketMQ] RocketMQ整体架构">&larr; Previous Post</a>
-                        </li>
-                    
-                    
-                        <li class="next">
-                            <a href="/article/HDFS启蒙/" data-toggle="tooltip" data-placement="top" title="HDFS启蒙">Next Post &rarr;</a>
-                        </li>
-                    
-                </ul>
 
                 <br>
 
-                <!--打赏-->
-                
-                <!--打赏-->
-
-                <br>                     
-                
                 <!-- require APlayer -->
                 
 
-                <!-- duoshuo Share start -->
+                <!-- 如果开启评论功能 -->
                 
-                <!-- 多说 Share end-->
-
-                <!-- 多说评论框 start -->
-                
-                <!-- 多说评论框 end -->
-
-                <!-- disqus comment start -->
-                
-                <!-- disqus comment end -->
-
-                
-
             </div>
+
+          <!-- Sidebar Container -->
+<div class="
+    col-lg-3 col-lg-offset-0
+    col-md-3 col-md-offset-0
+    col-sm-12
+    col-xs-12
+    sidebar-container
+">
+    
+        <!-- Featured Tags -->
+
+<section>
+    <!-- no hr -->
+    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+    <div class="tags">
+        
             
-            <!-- Tabe of Content -->
-            <!-- Table of Contents -->
-
-  
-    
-      <aside id="sidebar">
-        <div id="toc" class="toc-article">
-        <strong class="toc-title">Contents</strong>
+            <a href="/tags/#BigData" title="BigData" rel="8">BigData</a>
+            
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一-linux-网络诊断命令"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">一、Linux 网络诊断命令</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-查看网络接口速率"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">1、查看网络接口速率</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2vim-快捷命令"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">2.Vim 快捷命令</span></a></li></ol></li></ol>
+            
+            <a href="/tags/#Linux" title="Linux" rel="1">Linux</a>
+            
         
-        </div>
-      </aside>
-    
-
-                
-            <!-- Sidebar Container -->
-            <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                sidebar-container">
-
-                <!-- Featured Tags -->
-                
-                <section>
-                    <!-- no hr -->
-                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
-                    <div class="tags">
-                       
-                          <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
-                        
-                    </div>
-                </section>
-                
-
-                <!-- Friends Blog -->
-                
-            </div>
-        </div>
+            
+            <a href="/tags/#RocketMQ" title="RocketMQ" rel="3">RocketMQ</a>
+            
+        
     </div>
-</article>
+</section>
 
+        <hr>
+    
+        <!-- Short About -->
+<section class="visible-md visible-lg">
+    <h5><a href="/about/">ABOUT ME</a></h5>
+    <div class="short-about">
 
+        
+            <img id = "avatar_pic" src="/img/avatar.jpg" />
+        
 
+        
+            <p>Stay Hungry,Stay Foolish</p>
+        
 
+        <!-- SNS Link -->
+        <ul class="list-inline">
+            
+            
+                <li>
+                    <a target="_blank" href="https://twitter.com/zhengwenshan">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                </li>
+            
+            
+                <li>
+                    <a target="_blank" href="https://www.zhihu.com/people/zhengwenshan">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa  fa-stack-1x fa-inverse">知</i>
+                        </span>
+                    </a>
+                </li>
+            
 
+            
 
+            
 
+            
+                <li>
+                    <a target="_blank"  href="https://github.com/zhengwenshan">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                </li>
+            
+            
+            
+            
+                <li>
+                    <a target="_blank"  href="https://www.linkedin.com/in/zhengwenshan">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+</section>
 
-<!-- async load function -->
-<script>
-    function async(u, c) {
-      var d = document, t = 'script',
-          o = d.createElement(t),
-          s = d.getElementsByTagName(t)[0];
-      o.src = u;
-      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
-      s.parentNode.insertBefore(o, s);
-    }
-</script>
-<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
-<script>
-    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
-        anchors.options = {
-          visible: 'hover',
-          placement: 'left',
-          icon: 'ℬ'
-        };
-        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
-    })
-</script>
-<style>
-    /* place left on bigger screen */
-    @media all and (min-width: 800px) {
-        .anchorjs-link{
-            position: absolute;
-            left: -0.75em;
-            font-size: 1.1em;
-            margin-top : -0.1em;
-        }
-    }
-</style>
+        <hr>
+    
+        
+  <h5>RECENT POSTS</h3>
+  <div class="widget">
+    <ul>
+      
+        <li>
+          <a href="/article/HDFS HA/">HDFS NameNode 高可用</a>
+        </li>
+      
+        <li>
+          <a href="/article/HDFS 读写流程/">HDFS 读写流程</a>
+        </li>
+      
+        <li>
+          <a href="/article/HDFS 副本放置策略/">HDFS 副本放置策略</a>
+        </li>
+      
+        <li>
+          <a href="/article/HDFS 元数据持久化机制/">HDFS NameNode元数据持久化机制</a>
+        </li>
+      
+        <li>
+          <a href="/article/HDFS 安全模式/">HDFS 安全模式</a>
+        </li>
+      
+    </ul>
+  </div>
 
+        <hr>
+    
+        
+    <h5>ARCHIVES</h5>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a><span class="archive-list-count">12</span></li></ul>
+    </div>
 
-<!-- chrome Firefox 中文锚点定位失效-->
-<script src="/js/jquery.js"></script>
-<!-- smooth scroll behavior polyfill  -->
-<!-- <script type="text/javascript" src="/js/smoothscroll.js"></script> -->
-<script>
-        $('#toc').on('click','a',function(a){
-            // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
-            // console.log(window.navigator.userAgent,isChrome)
-                // if(isChrome) {
-                    // console.log(a.currentTarget.outerHTML);
-                    // console.log($(a.currentTarget).attr("href"));
-                    //跳转到指定锚点
-                    // document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
-                    document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
-                // }
-        })  
-</script>
+        <hr>
+    
+</div>
+
+        
+    </div>
+</div>
 
 
     <!-- Footer -->
