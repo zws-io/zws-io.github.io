@@ -145,14 +145,14 @@
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
@@ -228,30 +228,37 @@
 <p>通常在HA集群中，将分别部署两个NameNode在不同的机器上，并且确保在同一时间只有一个NameNode处于Active,另外一个则处于Standby状态。这个Active NameNode则响应集群中客户端的操作，Standby仅仅作为备份，保持数据状态足够完整，确保如果Active故障时能够进行快速转移。那么，如何实现Standy与Active进行实时同步呢？</p>
 <h3 id="311-主备同步场景分析">3.1.1 主备同步场景分析</h3>
 <ul>
-<li>方式一：<br>
+<li>
+<p>方式一：<br>
 Active同步发送给Standby，Active等待Standby更新成功后，再返回客户端。【不可取】<br>
-缺点：
+缺点：</p>
 <ol>
 <li>增加了Active同步给Standby的同步等待时间</li>
 <li>如果Standby服务不可用呢？那势必造成Active也不可用？本身我们HA的出发点，是为了解决Active单点故障，解决服务不可用，这样反而引入了新的服务不可用问题。</li>
 </ol>
 </li>
-<li>方式二：<br>
+<li>
+<p>方式二：<br>
 Active异步发送给Standby，Active本地操作成功则直接返回客户端。【不可取】<br>
-优点：
+优点：</p>
 <ol>
 <li>客户端无需等待Standy更新成功</li>
-<li>Active不依赖于Standy可用性<br>
-缺点：</li>
+<li>Active不依赖于Standy可用性</li>
+</ol>
+<p>缺点：</p>
+<ol>
 <li>Active挂掉，存在部分数据未同步至Standby的风险。</li>
 </ol>
 </li>
-<li>方式三：<br>
+<li>
+<p>方式三：<br>
 借助第三方分布式组件协助完成数据同步，这种方式虽然存在一定的开销，但是至少保证数据可靠性<br>
-缺点：
+缺点：</p>
 <ol>
-<li>引入第三方分布式存储介质【虽然说这个类似同步方式，一样依赖第三方分布式存储介质，但是分布式存储介质本身可靠性较高，除非出现脑裂的情况，则才会导致服务不可用】<br>
-优点：</li>
+<li>引入第三方分布式存储介质【虽然说这个类似同步方式，一样依赖第三方分布式存储介质，但是分布式存储介质本身可靠性较高，除非出现脑裂的情况，则才会导致服务不可用】</li>
+</ol>
+<p>优点：</p>
+<ol start="2">
 <li>能确保Active在怪掉之前，完成变更记录</li>
 </ol>
 </li>
