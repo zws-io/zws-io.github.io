@@ -144,14 +144,14 @@
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
@@ -255,8 +255,12 @@
             
         </h3>
         <div class="post-content-preview">
-            
-...
+            一、HDFS写数据操作
+1.1 写入流程
+
+Client要把文件写入到 HDFS，Client先和Namenode进行交互，Namenode基于副本放置策略，按DataNode距离从近到远排序，返回给Client DataNode节点地址列表。
+Client直接与距离自己最近的DataNode进行通讯，并将Block数据拆分成一个个64KB的数据, 然后一个个写入最近的DataNode。
+首......
         </div>
     </a>
     
@@ -571,7 +575,7 @@ Consumer：消息消费的角色，支持分布式集群方式部署。支持以
     
     
         <li class="next">
-            <a href="/archives/2/">Older Posts &rarr;</a>
+            <a href="/page/2/">Older Posts &rarr;</a>
         </li>
     
 </ul>
