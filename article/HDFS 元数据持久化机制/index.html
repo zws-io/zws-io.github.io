@@ -147,7 +147,7 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
@@ -161,7 +161,7 @@
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -271,7 +271,9 @@
 </li>
 </ul>
 <h1 id="二-namenode内存持久化方式">二、NameNode内存持久化方式</h1>
-<p>NameNode 吸取了以上两种方式的优点，采用了FsImage + EditLog整合的方案，滚动将EditLog更新到FsImage, 以保证更近时点的FsImage和更小的EditLog体积。具体流程如图所示：</p>
+<p>NameNode 吸取了以上两种方式的优点，采用了FsImage + EditLog整合的方案，滚动将EditLog更新到FsImage, 以保证更近时点的FsImage和更小的EditLog体积。<br>
+在非HA模式下，Secondary Node周期性完成对Namenode的EditLog箱FsImage合并，减少EditLog的大小，从而减少NameNode下一次启动时间，可根据配置文件设置周期时间间隔 fs.checkpoint.period 默认是3600s, fs.checkpoint.size 设置edigLog多大是触发合并动作，默认是64MB。<br>
+具体流程如图所示：</p>
 <ol>
 <li>
 <p>NameNode 与 SecondaryNode交互图<br>
@@ -282,6 +284,8 @@
 <img src="/images/HDFS/namenode_save.png" alt></p>
 </li>
 </ol>
+<h2 id="21-合并方式思考">2.1 合并方式思考</h2>
+<p>最开始了解到这个SecondaryNode仅仅只是专门用于处理FsImage 与 EditLog的合并时，脑海里浮现出第一个想法，这样效率高吗？毕竟需要从Namenode中将EditLog拷贝至SNN 进行合并后,再将合并后完整的FsImage再发送回给Namenode，这部分的资源开销也不少啊，何来减少NameNode这一说法？为何不采用类似Redis的方式，在时点的时候，触发一个fork，然后主进程继续对外提供服务，子进程慢慢的来处理内存数据持久化到磁盘。唯独一种可能，就是Java无法实现类似C直接进行fork，能够保持子进程拿到的数据是那个时点的镜像(其实并没有复制，内存地址还是一样，只是父进程进行修改变更的时候，进行写时复制)，这个估计是跟Java对象本身也走一层指针有关系。待进一步确认。</p>
 <h1 id="三-元数据持久化处理日志打印">三、元数据持久化处理日志打印</h1>
 <ol>
 <li>NameNode启动加载fsImage与EditLog</li>
@@ -307,7 +311,7 @@
                     
                     
                         <li class="next">
-                            <a href="/article/HDFS架构设计/" data-toggle="tooltip" data-placement="top" title="HDFS架构设计">Next Post &rarr;</a>
+                            <a href="/article/HDFS 安全模式/" data-toggle="tooltip" data-placement="top" title="HDFS 安全模式">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -348,7 +352,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一-业界内存持久化方案"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">一、 业界内存持久化方案</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二-namenode内存持久化方式"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">二、NameNode内存持久化方式</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三-元数据持久化处理日志打印"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">三、元数据持久化处理日志打印</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一-业界内存持久化方案"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">一、 业界内存持久化方案</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二-namenode内存持久化方式"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">二、NameNode内存持久化方式</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#21-合并方式思考"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">2.1 合并方式思考</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三-元数据持久化处理日志打印"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">三、元数据持久化处理日志打印</span></a></li></ol>
         
         </div>
       </aside>
