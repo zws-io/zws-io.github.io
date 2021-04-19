@@ -214,6 +214,42 @@
 
 <div class="post-preview">
 
+    <a href="/article/RocketMQ网络模型/">
+        <h2 class="post-title">
+                                 
+            [RocketMQ] RocketMQ网络模型
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            一、Broker 网络模型架构
+
+1.1 整体处理流程
+
+Netty eventLoopGroupBoss 作为 acceptor 负责接收客户端的连接请求
+Netty eventLoopGroupSelector 负责 NIO 的读写操作
+NettyServerHandler 读取 IO 数据，并对消息头进行解析
+Dispatch 过程根据注册的消息 code 和 processsor 把......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by zhengws on
+            2021-04-07
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#RocketMQ" title="RocketMQ">RocketMQ</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/article/Linux命令/">
         <h2 class="post-title">
                                  
@@ -426,6 +462,10 @@ rxmcst/s：每秒钟接收的多播数据包
     <ul>
       
         <li>
+          <a href="/article/Test/">TestHHHH</a>
+        </li>
+      
+        <li>
           <a href="/article/HDFS HA/">HDFS NameNode 高可用</a>
         </li>
       
@@ -441,10 +481,6 @@ rxmcst/s：每秒钟接收的多播数据包
           <a href="/article/HDFS 元数据持久化机制/">HDFS NameNode元数据持久化机制</a>
         </li>
       
-        <li>
-          <a href="/article/HDFS 安全模式/">HDFS 安全模式</a>
-        </li>
-      
     </ul>
   </div>
 
@@ -453,7 +489,7 @@ rxmcst/s：每秒钟接收的多播数据包
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a><span class="archive-list-count">12</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a><span class="archive-list-count">13</span></li></ul>
     </div>
 
         <hr>
