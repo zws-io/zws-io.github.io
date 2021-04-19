@@ -147,14 +147,14 @@
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
@@ -237,6 +237,12 @@
 </ol>
 <h1 id="二-hdfs-读数据操作">二、HDFS 读数据操作</h1>
 <h2 id="21-hdfs-读流程">2.1 HDFS 读流程</h2>
+<ol>
+<li>Client先从NameNode获取该文件block所存储的地址信息，即DataNode信息</li>
+<li>Client读取某个block时，选取特定的DataNode进行读取</li>
+<li>DataNode向输入流中中写数据，以packet为单位来校验</li>
+<li>关闭输入流</li>
+</ol>
 <p><img src="/images/HDFS/hdfs_read.png" alt></p>
 
                 

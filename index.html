@@ -137,14 +137,14 @@
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
@@ -390,20 +390,22 @@ Client直接与距离自己最近的DataNode进行通讯，并将Block数据拆�
 
 <div class="post-preview">
 
-    <a href="/article/HDFS架构设计/">
+    <a href="/article/HDFS集群部署/">
         <h2 class="post-title">
                                  
-            HDFS架构设计
+            HDFS集群部署
         </h2>
         <h3 class="post-subtitle">
             
         </h3>
         <div class="post-content-preview">
-            一、HDFS架构设计
-1.1 整体架构
-HDFS是一个主从(Master/Slave)架构，由一个NameNode和一些DataNode组成，NameNode负责存储和管理文件元数据(metadata)，并维护一个层次型的文件目录树，而DataNode则负责存储文件数据(block块)，提供block块的读写，并与NameNode维持心跳，上报自身持有的block块信息.
+            一、HDFS基础环境安装
+1.1 安装JDK
 
-1.2 角色功能......
+下载至少1.8版本以上的jdk rpm包，安装并设置环境变量。
+
+1.2 设置HDFS环境变量
+123456# User specific environment and startup programsJAVA_HOME=/usr/java/defaultHADOOP_HOME=/opt/bigdata/hadoop-2.6.5PATH=$P......
         </div>
     </a>
     
@@ -425,22 +427,20 @@ HDFS是一个主从(Master/Slave)架构，由一个NameNode和一些DataNode组�
 
 <div class="post-preview">
 
-    <a href="/article/HDFS集群部署/">
+    <a href="/article/HDFS架构设计/">
         <h2 class="post-title">
                                  
-            HDFS集群部署
+            HDFS架构设计
         </h2>
         <h3 class="post-subtitle">
             
         </h3>
         <div class="post-content-preview">
-            一、HDFS基础环境安装
-1.1 安装JDK
+            一、HDFS架构设计
+1.1 整体架构
+HDFS是一个主从(Master/Slave)架构，由一个NameNode和一些DataNode组成，NameNode负责存储和管理文件元数据(metadata)，并维护一个层次型的文件目录树，而DataNode则负责存储文件数据(block块)，提供block块的读写，并与NameNode维持心跳，上报自身持有的block块信息.
 
-下载至少1.8版本以上的jdk rpm包，安装并设置环境变量。
-
-1.2 设置HDFS环境变量
-123456# User specific environment and startup programsJAVA_HOME=/usr/java/defaultHADOOP_HOME=/opt/bigdata/hadoop-2.6.5PATH=$P......
+1.2 角色功能......
         </div>
     </a>
     
